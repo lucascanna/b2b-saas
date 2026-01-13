@@ -7,6 +7,8 @@
         "is_entrypoint": true,
         "external_connection_variable": "NEXT_PUBLIC_APP_URL",
         "dbMigrateCommand": "db:migratepippo"
+        "develop_command": "bun run dev",
+        "deploy_command": "bun run build && bun run start"
       }
     },
     "storages": {
