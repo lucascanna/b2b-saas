@@ -38,6 +38,7 @@ interface TaskItemProps {
 }
 
 const priorityColors = {
+  urgent: 'bg-red-700/15 text-red-800 dark:text-red-300 border-red-700/30',
   low: 'bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-500/20',
   medium: 'bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20',
   high: 'bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/20',

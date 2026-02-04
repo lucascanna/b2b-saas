@@ -44,6 +44,7 @@ interface KanbanBoardProps {
 }
 
 const PRIORITY_COLUMNS: { id: TaskPriority; title: string }[] = [
+  { id: 'urgent', title: 'Urgent' },
   { id: 'low', title: 'Low Priority' },
   { id: 'medium', title: 'Medium Priority' },
   { id: 'high', title: 'High Priority' },

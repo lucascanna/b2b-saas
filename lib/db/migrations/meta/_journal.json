@@ -43,6 +43,13 @@
       "when": 1767179212646,
       "tag": "0005_fat_karnak",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1770224321353,
+      "tag": "0006_brave_quicksilver",
+      "breakpoints": true
     }
   ]
 }
