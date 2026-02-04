@@ -9,6 +9,7 @@ import {
   CheckSquare,
   File,
   Loader2,
+  MessageSquare,
   ReceiptText,
   Shield,
   SquareTerminal,
@@ -54,7 +55,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       deleteSession(sessionToDelete.id);
 
       if (chatId === sessionToDelete.id) {
-        router.push(`/org/${activeOrganization?.slug}/assistant`);
+        router.push(`/org/${activeOrganization?.slug}/chat`);
       }
     }
     setDeleteDialogOpen(false);
@@ -90,15 +91,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         icon: File,
       },
       {
-        title: 'Assistant',
-        url: `${orgPrefix}/assistant`,
-        icon: Bot,
+        title: 'Chat',
+        url: `${orgPrefix}/chat`,
+        icon: MessageSquare,
         ...(sessions.length > 0
           ? {
               items: sessions.map((session) => ({
                 title: session.title,
-                url: `${orgPrefix}/assistant/${session.id}`,
-                icon: Bot,
+                url: `${orgPrefix}/chat/${session.id}`,
+                icon: MessageSquare,
                 actions: [
                   {
                     title: 'Delete',
@@ -113,6 +114,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               })),
             }
           : []),
+      },
+      {
+        title: 'Assistant',
+        url: `${orgPrefix}/assistant`,
+        icon: Bot,
       },
     ];
 

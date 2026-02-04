@@ -1,9 +1,14 @@
+/**
+ * Chat tRPC Router
+ *
+ * Thin layer for chat operations - validates input and calls chat service
+ * Service layer handles all business logic and database operations
+ */
+
 import { TRPCError } from '@trpc/server';
 import { UIDataTypes, UIMessagePart, UITools } from 'ai';
-import { and, asc, count, desc, eq } from 'drizzle-orm';
 
-import { db } from '@/lib/db/drizzle';
-import { chatMessages, chatSessions } from '@/lib/db/schema';
+import * as chatService from '@/lib/services/chat-service';
 import { orgProcedure, router } from '@/lib/trpc/init';
 import {
   createChatSessionSchema,
@@ -12,11 +17,8 @@ import {
   getSessionSchema,
   listChatSessionsSchema,
   updateChatSessionTitleSchema,
-} from '@/lib/trpc/schemas/documents';
+} from '@/lib/trpc/schemas/chat';
 import { messageMetadataSchema } from '@/lib/types/chat';
-
-// Sources are now stored in message metadata (not parts)
-// Metadata format: { sources: [{ documentId: string, title: string, url?: string }] }
 
 export const chatRouter = router({
   /**
@@ -25,46 +27,22 @@ export const chatRouter = router({
    */
   listSessions: orgProcedure.input(listChatSessionsSchema).query(async ({ ctx, input }) => {
     const { page, pageSize, organizationId } = input;
-    const offset = (page - 1) * pageSize;
 
-    // Get total count using SQL COUNT() function (efficient)
-    const [{ count: total }] = await db
-      .select({ count: count() })
-      .from(chatSessions)
-      .where(
-        and(eq(chatSessions.organizationId, organizationId), eq(chatSessions.userId, ctx.userId))
-      );
-
-    // Get paginated results
-    const sessions = await db
-      .select()
-      .from(chatSessions)
-      .where(
-        and(eq(chatSessions.organizationId, organizationId), eq(chatSessions.userId, ctx.userId))
-      )
-      .orderBy(desc(chatSessions.updatedAt))
-      .limit(pageSize)
-      .offset(offset);
-
-    return {
-      sessions,
-      total,
+    return await chatService.listSessions({
+      organizationId,
+      userId: ctx.userId,
       page,
       pageSize,
-      totalPages: Math.ceil(total / pageSize),
-    };
+    });
   }),
 
+  /**
+   * Get a single chat session by ID
+   */
   getSession: orgProcedure.input(getSessionSchema).query(async ({ ctx, input }) => {
     const { organizationId, chatSessionId } = input;
 
-    const session = await db.query.chatSessions.findFirst({
-      where: and(
-        eq(chatSessions.id, chatSessionId),
-        eq(chatSessions.organizationId, organizationId),
-        eq(chatSessions.userId, ctx.userId)
-      ),
-    });
+    const session = await chatService.getSession(chatSessionId, organizationId, ctx.userId);
 
     if (!session) {
       throw new TRPCError({
@@ -84,14 +62,8 @@ export const chatRouter = router({
   getMessages: orgProcedure.input(getMessagesSchema).query(async ({ ctx, input }) => {
     const { organizationId, chatSessionId } = input;
 
-    // Verify session exists and belongs to organization
-    const session = await db.query.chatSessions.findFirst({
-      where: and(
-        eq(chatSessions.id, chatSessionId),
-        eq(chatSessions.organizationId, organizationId),
-        eq(chatSessions.userId, ctx.userId)
-      ),
-    });
+    // Verify session exists and belongs to user
+    const session = await chatService.getSession(chatSessionId, organizationId, ctx.userId);
 
     if (!session) {
       throw new TRPCError({
@@ -100,19 +72,15 @@ export const chatRouter = router({
       });
     }
 
-    // Get messages ordered by creation time
-    const rawMessages = await db
-      .select()
-      .from(chatMessages)
-      .where(eq(chatMessages.chatSessionId, chatSessionId))
-      .orderBy(asc(chatMessages.createdAt));
+    // Get messages with metadata parsed
+    const rawMessages = await chatService.getMessages(chatSessionId);
 
-    // Parse messages with runtime validation
+    // Parse and validate messages
     const messages = rawMessages.map((message) => {
       try {
         const parts = JSON.parse(message.parts) as UIMessagePart<UIDataTypes, UITools>[];
 
-        const metadata = message.metadata ? JSON.parse(message.metadata) : undefined;
+        const metadata = message.metadata;
 
         // Validate metadata structure (contains document sources)
         if (metadata) {
@@ -149,30 +117,20 @@ export const chatRouter = router({
   createSession: orgProcedure.input(createChatSessionSchema).mutation(async ({ ctx, input }) => {
     const { organizationId, title } = input;
 
-    const [session] = await db
-      .insert(chatSessions)
-      .values({
-        organizationId,
-        userId: ctx.userId,
-        title,
-      })
-      .returning();
-
-    return session;
+    return await chatService.createSession({
+      organizationId,
+      userId: ctx.userId,
+      title,
+    });
   }),
 
   /**
    * Delete a chat session
    */
-  deleteSession: orgProcedure.input(deleteChatSessionSchema).mutation(async ({ input }) => {
+  deleteSession: orgProcedure.input(deleteChatSessionSchema).mutation(async ({ ctx, input }) => {
     const { organizationId, chatSessionId } = input;
 
-    // Delete session (messages will cascade delete)
-    await db
-      .delete(chatSessions)
-      .where(
-        and(eq(chatSessions.id, chatSessionId), eq(chatSessions.organizationId, organizationId))
-      );
+    await chatService.deleteSession(chatSessionId, organizationId, ctx.userId);
 
     return { success: true };
   }),
@@ -180,16 +138,13 @@ export const chatRouter = router({
   /**
    * Update chat session title
    */
-  updateSession: orgProcedure.input(updateChatSessionTitleSchema).mutation(async ({ input }) => {
-    const { organizationId, chatSessionId, title } = input;
+  updateSession: orgProcedure
+    .input(updateChatSessionTitleSchema)
+    .mutation(async ({ ctx, input }) => {
+      const { organizationId, chatSessionId, title } = input;
 
-    await db
-      .update(chatSessions)
-      .set({ title, updatedAt: new Date() })
-      .where(
-        and(eq(chatSessions.id, chatSessionId), eq(chatSessions.organizationId, organizationId))
-      );
+      await chatService.updateSessionTitle(chatSessionId, organizationId, ctx.userId, title);
 
-    return { success: true };
-  }),
+      return { success: true };
+    }),
 });
