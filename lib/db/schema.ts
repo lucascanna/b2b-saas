@@ -13,7 +13,7 @@ import {
 } from 'drizzle-orm/pg-core';
 
 // Enums
-export const taskPriorityEnum = pgEnum('task_priority', ['low', 'medium', 'high']);
+export const taskPriorityEnum = pgEnum('task_priority', ['urgent', 'low', 'medium', 'high']);
 export const orgRoleEnum = pgEnum('org_role', ['owner', 'admin', 'member']);
 export const orderStatusEnum = pgEnum('order_status', [
   'pending',
