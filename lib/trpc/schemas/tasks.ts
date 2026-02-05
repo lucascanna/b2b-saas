@@ -11,6 +11,7 @@ export const createTaskSchema = z.object({
   priority: z.enum(['urgent', 'low', 'medium', 'high']).optional(),
   dueDate: z.date().optional(),
   organizationId: z.uuid().optional(),
+  tags: z.array(z.string()).optional(),
 });
 
 export const updateTaskSchema = z.object({
@@ -21,6 +22,7 @@ export const updateTaskSchema = z.object({
   priority: z.enum(['urgent', 'low', 'medium', 'high']).optional(),
   dueDate: z.date().nullable().optional(),
   organizationId: z.uuid().nullable().optional(),
+  tags: z.array(z.string()).nullable().optional(),
 });
 
 export const taskListFiltersSchema = z

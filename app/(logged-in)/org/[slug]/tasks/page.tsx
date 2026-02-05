@@ -277,6 +277,7 @@ export default function OrgTasksPage() {
                 description: selectedTask.description ?? undefined,
                 priority: selectedTask.priority,
                 dueDate: selectedTask.dueDate ?? undefined,
+                tags: selectedTask.tags ?? undefined,
               }
             : undefined
         }

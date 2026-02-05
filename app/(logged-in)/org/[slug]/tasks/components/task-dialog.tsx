@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -24,6 +24,7 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -60,6 +61,8 @@ export function TaskDialog({
   mode,
   isSubmitting,
 }: TaskDialogProps) {
+  const [tagsInput, setTagsInput] = useState('');
+
   const form = useForm<TaskFormValues>({
     resolver: zodResolver(createTaskSchema),
     defaultValues: {
@@ -67,24 +70,41 @@ export function TaskDialog({
       description: initialValues?.description ?? '',
       priority: initialValues?.priority ?? 'medium',
       dueDate: initialValues?.dueDate ?? undefined,
+      tags: initialValues?.tags ?? undefined,
     },
   });
 
   // Reset form when dialog opens/closes or initial values change
   useEffect(() => {
     if (open) {
+      const tagsString = initialValues?.tags?.join(', ') ?? '';
+      setTagsInput(tagsString);
+
       form.reset({
         title: initialValues?.title ?? '',
         description: initialValues?.description ?? '',
         priority: initialValues?.priority ?? 'medium',
         dueDate: initialValues?.dueDate ?? undefined,
+        tags: initialValues?.tags ?? undefined,
       });
     }
   }, [open, initialValues, form]);
 
   const handleSubmit = async (values: TaskFormValues) => {
-    await onSubmit(values);
+    // Parse tags input into array
+    const tagsArray = tagsInput
+      .split(',')
+      .map((tag) => tag.trim())
+      .filter((tag) => tag.length > 0);
+
+    const valuesWithTags = {
+      ...values,
+      tags: tagsArray.length > 0 ? tagsArray : undefined,
+    };
+
+    await onSubmit(valuesWithTags);
     form.reset();
+    setTagsInput('');
     onOpenChange(false);
   };
 
@@ -130,6 +150,19 @@ export function TaskDialog({
                 </FormItem>
               )}
             />
+            <FormItem>
+              <FormLabel>Tags</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="Enter tags separated by commas (e.g., urgent, bug, frontend)"
+                  value={tagsInput}
+                  onChange={(e) => setTagsInput(e.target.value)}
+                />
+              </FormControl>
+              <FormDescription className="text-xs">
+                Separate multiple tags with commas
+              </FormDescription>
+            </FormItem>
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
