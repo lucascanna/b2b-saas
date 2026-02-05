@@ -32,6 +32,7 @@ interface TaskItemProps {
   priority: TaskPriority;
   dueDate: Date | null;
   isOverdue: boolean;
+  tags: string[] | null;
   onToggleComplete: (input: UpdateTaskInput) => void;
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
@@ -52,6 +53,7 @@ export function TaskItem({
   priority,
   dueDate,
   isOverdue,
+  tags,
   onToggleComplete,
   onEdit,
   onDelete,
@@ -87,6 +89,15 @@ export function TaskItem({
             <p className={cn('text-muted-foreground text-sm', completed && 'line-through')}>
               {description}
             </p>
+          )}
+          {tags && tags.length > 0 && (
+            <div className="flex flex-wrap gap-1 mt-2">
+              {tags.map((tag, index) => (
+                <Badge key={index} variant="outline" className="text-xs px-2 py-0.5">
+                  {tag}
+                </Badge>
+              ))}
+            </div>
           )}
           <div className="flex items-center gap-2 pt-1">
             <Badge variant="outline" className={priorityColors[priority]}>
