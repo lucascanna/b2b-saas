@@ -190,6 +190,7 @@ export const activityLogs = pgTable('activity_logs', {
   id: uuid('id').defaultRandom().primaryKey(),
   userId: uuid('user_id').notNull(),
   action: text('action').notNull(),
+  tags: text('tags'),
   timestamp: timestamp('timestamp').notNull().defaultNow(),
   ipAddress: varchar('ip_address', { length: 45 }),
   metadata: text('metadata'), // JSON string for additional context

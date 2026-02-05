@@ -97,9 +97,9 @@ export function KanbanTaskCard({ task, onEdit, onDelete, onToggleComplete }: Kan
 
         {/* Tags */}
         {task.tags && task.tags.length > 0 && (
-          <div className="flex flex-wrap gap-1 mt-2">
-            {task.tags.map((tag, index) => (
-              <Badge key={index} variant="outline" className="text-xs px-2 py-0.5">
+          <div className="mt-2 flex flex-wrap gap-1">
+            {task.tags.map((tag: string, index: number) => (
+              <Badge key={index} variant="outline" className="px-2 py-0.5 text-xs">
                 {tag}
               </Badge>
             ))}

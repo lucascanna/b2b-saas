@@ -1,5 +1,5 @@
 {
-  "id": "492ef06f-d5b6-4f04-9451-0b438d5e016b",
+  "id": "fb93e49b-57ea-4131-92da-85eb90fd5dcc",
   "prevId": "325670cd-b8f4-4f14-ae54-d8330dd4e3a2",
   "version": "7",
   "dialect": "postgresql",
@@ -149,6 +149,12 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "tags": {
+          "name": "tags",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "timestamp": {
           "name": "timestamp",
@@ -1404,12 +1410,6 @@
         "due_date": {
           "name": "due_date",
           "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "tags": {
-          "name": "tags",
-          "type": "text",
           "primaryKey": false,
           "notNull": false
         },
