@@ -50,6 +50,13 @@
       "when": 1770224321353,
       "tag": "0006_brave_quicksilver",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1770287068750,
+      "tag": "0007_real_bishop",
+      "breakpoints": true
     }
   ]
 }
