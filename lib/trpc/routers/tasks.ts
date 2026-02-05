@@ -65,6 +65,7 @@ export const tasksRouter = router({
       completed: task.completed === 'true',
       priority: task.priority, // Type is now inferred from pgEnum in schema
       dueDate: task.dueDate,
+      tags: task.tags ? JSON.parse(task.tags) : null,
       createdAt: task.createdAt,
       updatedAt: task.updatedAt,
       isOverdue:
@@ -85,6 +86,7 @@ export const tasksRouter = router({
         description: input.description ?? null,
         priority: input.priority,
         dueDate: input.dueDate ?? null,
+        tags: input.tags ? JSON.stringify(input.tags) : null,
         completed: 'false',
       })
       .returning();
@@ -96,6 +98,7 @@ export const tasksRouter = router({
       completed: task.completed === 'true',
       priority: task.priority, // Type is now inferred from pgEnum in schema
       dueDate: task.dueDate,
+      tags: task.tags ? JSON.parse(task.tags) : null,
       createdAt: task.createdAt,
       updatedAt: task.updatedAt,
     };
@@ -129,6 +132,7 @@ export const tasksRouter = router({
     if (input.priority !== undefined) updateData.priority = input.priority;
     if (input.dueDate !== undefined) updateData.dueDate = input.dueDate;
     if (input.organizationId !== undefined) updateData.organizationId = input.organizationId;
+    if (input.tags !== undefined) updateData.tags = input.tags ? JSON.stringify(input.tags) : null;
 
     const [updatedTask] = await db
       .update(tasks)
@@ -143,6 +147,7 @@ export const tasksRouter = router({
       completed: updatedTask.completed === 'true',
       priority: updatedTask.priority, // Type is now inferred from pgEnum in schema
       dueDate: updatedTask.dueDate,
+      tags: updatedTask.tags ? JSON.parse(updatedTask.tags) : null,
       createdAt: updatedTask.createdAt,
       updatedAt: updatedTask.updatedAt,
     };

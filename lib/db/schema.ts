@@ -207,7 +207,7 @@ export const tasks = pgTable('tasks', {
   completed: text('completed').notNull().default('false'), // 'true' or 'false' as text
   priority: taskPriorityEnum('priority').notNull().default('medium'),
   dueDate: timestamp('due_date'),
-  tags: text('tags'), // JSON string array for task tags (e.g., ["tag1", "tag2"])
+  tags: text('tags'), // JSON stringified array of tags (e.g., '["urgent", "bug"]')
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at')
     .defaultNow()
