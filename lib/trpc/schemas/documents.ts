@@ -41,36 +41,3 @@ export const getDownloadUrlSchema = z.object({
   id: z.uuid(),
   organizationId: z.uuid(),
 });
-
-// Chat schemas
-export const createChatSessionSchema = z.object({
-  organizationId: z.uuid(),
-  title: z.string().min(1).max(255).default('New Chat'),
-});
-
-export const listChatSessionsSchema = z.object({
-  organizationId: z.uuid(),
-  page: z.number().int().positive().default(1),
-  pageSize: z.number().int().positive().min(1).max(100).default(20),
-});
-
-export const getSessionSchema = z.object({
-  chatSessionId: z.uuid(),
-  organizationId: z.uuid(),
-});
-
-export const getMessagesSchema = z.object({
-  chatSessionId: z.uuid(),
-  organizationId: z.uuid(),
-});
-
-export const deleteChatSessionSchema = z.object({
-  chatSessionId: z.uuid(),
-  organizationId: z.uuid(),
-});
-
-export const updateChatSessionTitleSchema = z.object({
-  chatSessionId: z.uuid(),
-  organizationId: z.uuid(),
-  title: z.string().min(1).max(255),
-});
