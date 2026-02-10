@@ -13,6 +13,7 @@ import { AlertCircle, Calendar, MoreVertical, Pencil, Trash2 } from 'lucide-reac
 import type { AppRouter } from '@/lib/trpc/router';
 import { cn } from '@/lib/utils';
 
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -92,6 +93,17 @@ export function KanbanTaskCard({ task, onEdit, onDelete, onToggleComplete }: Kan
           <p className={cn('text-muted-foreground line-clamp-2 pt-2 text-xs')}>
             {task.description}
           </p>
+        )}
+
+        {/* Tags */}
+        {task.tags && task.tags.length > 0 && (
+          <div className="mt-2 flex flex-wrap gap-1">
+            {task.tags.map((tag: string, index: number) => (
+              <Badge key={index} variant="outline" className="px-2 py-0.5 text-xs">
+                {tag}
+              </Badge>
+            ))}
+          </div>
         )}
 
         {/* Footer with priority and due date */}
