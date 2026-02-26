@@ -31,6 +31,12 @@ function validateEnvironmentVariables() {
   }
 
   console.log('✅ All required environment variables are present');
+
+  // TEST: Crash after 5 seconds to simulate autorestart loop
+  setTimeout(() => {
+    console.error('💥 TEST CRASH: Simulating startup failure');
+    process.exit(1);
+  }, 5000);
 }
 
 export async function register() {
