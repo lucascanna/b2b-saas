@@ -86,11 +86,35 @@ export function Home() {
               </Badge>
             </motion.div>
 
-            <h1 className="mb-4 px-2 text-3xl leading-tight font-bold tracking-tight sm:mb-6 sm:text-5xl lg:text-7xl">
-              Skip the boilerplate
-              <br />
-              Ship features
-            </h1>
+            <div className="relative mb-4 px-2 sm:mb-6">
+              {/* Animated glow container */}
+              <div className="relative inline-block">
+                {/* Glowing border effect */}
+                <div className="absolute inset-0 -m-[2px] rounded-lg">
+                  <motion.div
+                    className="absolute inset-0 rounded-lg"
+                    style={{
+                      background:
+                        'conic-gradient(from 0deg, transparent 0%, transparent 85%, hsl(var(--primary)) 90%, transparent 95%, transparent 100%)',
+                      filter: 'blur(8px)',
+                    }}
+                    animate={{
+                      rotate: 360,
+                    }}
+                    transition={{
+                      duration: 4,
+                      repeat: Infinity,
+                      ease: 'linear',
+                    }}
+                  />
+                </div>
+                <h1 className="relative text-3xl leading-tight font-bold tracking-tight sm:text-5xl lg:text-7xl">
+                  Skip the boilerplate
+                  <br />
+                  Ship features
+                </h1>
+              </div>
+            </div>
 
             <p className="text-muted-foreground mx-auto mb-6 max-w-2xl px-2 font-sans text-base sm:mb-8 sm:text-lg lg:text-xl">
               Production-ready Next.js template with auth, billing, database, and deployment.
