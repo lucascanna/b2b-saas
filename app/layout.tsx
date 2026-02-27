@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { DM_Sans, Geist, Geist_Mono } from 'next/font/google';
 import Script from 'next/script';
 
 import { Providers } from '@/components/providers';
@@ -14,6 +14,12 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
   subsets: ['latin'],
+});
+
+const dmSans = DM_Sans({
+  variable: '--font-headline',
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
 });
 
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://template.kosuke.ai';
@@ -117,7 +123,7 @@ export default function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} ${dmSans.variable} antialiased`}>
         {plausibleDomain && plausibleHost && (
           <Script
             defer
