@@ -93,6 +93,40 @@
       height: 0;
     }
   }
+
+  @keyframes glow-trace {
+    0%, 100% {
+      text-shadow:
+        0 0 20px oklch(0.922 0 0 / 0.3),
+        0 0 40px oklch(0.922 0 0 / 0.2),
+        0 0 60px oklch(0.922 0 0 / 0.1),
+        2px 2px 4px oklch(0.922 0 0 / 0.4);
+    }
+    25% {
+      text-shadow:
+        0 0 30px oklch(0.922 0 0 / 0.5),
+        0 0 50px oklch(0.922 0 0 / 0.3),
+        0 0 70px oklch(0.922 0 0 / 0.2),
+        -2px 2px 4px oklch(0.922 0 0 / 0.4);
+    }
+    50% {
+      text-shadow:
+        0 0 20px oklch(0.922 0 0 / 0.3),
+        0 0 40px oklch(0.922 0 0 / 0.2),
+        0 0 60px oklch(0.922 0 0 / 0.1),
+        -2px -2px 4px oklch(0.922 0 0 / 0.4);
+    }
+    75% {
+      text-shadow:
+        0 0 30px oklch(0.922 0 0 / 0.5),
+        0 0 50px oklch(0.922 0 0 / 0.3),
+        0 0 70px oklch(0.922 0 0 / 0.2),
+        2px -2px 4px oklch(0.922 0 0 / 0.4);
+    }
+  }
+
+  /* Animation Definition */
+  --animate-glow-trace: glow-trace 4s ease-in-out infinite;
 }
 
 /* ----------------------------------------------------------------------------
@@ -183,6 +217,19 @@
   &::-webkit-scrollbar-thumb:hover {
     background-color: rgba(156, 163, 175, 0.5);
   }
+}
+
+@utility glow-trace {
+  /* Animated glowing text effect */
+  animation: var(--animate-glow-trace);
+  will-change: text-shadow;
+
+  /* Base glow for better visibility */
+  text-shadow:
+    0 0 20px oklch(0.922 0 0 / 0.3),
+    0 0 40px oklch(0.922 0 0 / 0.2),
+    0 0 60px oklch(0.922 0 0 / 0.1),
+    2px 2px 4px oklch(0.922 0 0 / 0.4);
 }
 
 /* ============================================================================
